@@ -12,7 +12,11 @@ class ESLiveCameraScreen extends StatelessWidget {
         onTap: () {
           showAboutDialog(
               context: context,
-              applicationName: 'Eyessistant',
+              applicationName: 'Live Camera',
+              applicationIcon: Image.asset(
+                'assets/images/eyessistant.png',
+                scale: 5,
+              ),
               children: [const ESText('Lorem Ipsum Dolor')]);
         },
       ),

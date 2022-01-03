@@ -38,7 +38,20 @@ class ESHomeScreen extends StatelessWidget {
                         itemBuilder: (context) => [
                           PopupMenuItem(
                               child: ListTile(
-                                  title: const Text('About us'), onTap: () {}))
+                                  title: const Text('About us'),
+                                  onTap: () {
+                                    showAboutDialog(
+                                        context: context,
+                                        applicationName: 'Eyessistant',
+                                        applicationVersion: '1.0.0',
+                                        applicationIcon: Image.asset(
+                                          'assets/images/eyessistant.png',
+                                          scale: 5,
+                                        ),
+                                        children: [
+                                          const ESText('Lorem Ipsum Dolor')
+                                        ]);
+                                  }))
                         ],
                       ),
                     )),

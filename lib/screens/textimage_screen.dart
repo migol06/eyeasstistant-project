@@ -1,4 +1,3 @@
-import 'package:eyeassistant/widgets/app_bar.dart';
 import 'package:eyeassistant/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +11,11 @@ class ESTextImageScreen extends StatelessWidget {
         onTap: () {
           showAboutDialog(
               context: context,
-              applicationName: 'Eyessistant',
+              applicationName: 'Text Image Screen',
+              applicationIcon: Image.asset(
+                'assets/images/eyessistant.png',
+                scale: 5,
+              ),
               children: [const ESText('Lorem Ipsum Dolor')]);
         },
       ),
