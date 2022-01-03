@@ -1,4 +1,4 @@
-import 'package:eyeassistant/screens/widget_demo.dart';
+import 'package:eyeassistant/screens/screens.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const ESWidgetDemo(),
+      home: const ESHomeScreen(),
     );
   }
 }
