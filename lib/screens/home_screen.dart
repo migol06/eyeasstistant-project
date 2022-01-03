@@ -1,4 +1,6 @@
+import 'package:eyeassistant/screens/livecamera_screen.dart';
 import 'package:eyeassistant/screens/screens.dart';
+import 'package:eyeassistant/screens/textimage_screen.dart';
 import 'package:eyeassistant/widgets/constants/constants.dart';
 import 'package:eyeassistant/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -62,7 +64,7 @@ class ESHomeScreen extends StatelessWidget {
                       backGroundColor: ESColor.primaryBlue,
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => const ESWidgetDemo()));
+                            builder: (context) => const ESLiveCameraScreen()));
                       },
                     ),
                     const SizedBox(
@@ -74,7 +76,7 @@ class ESHomeScreen extends StatelessWidget {
                       backGroundColor: ESColor.orange,
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => const ESWidgetDemo()));
+                            builder: (context) => const ESTextImageScreen()));
                       },
                     )
                   ],
