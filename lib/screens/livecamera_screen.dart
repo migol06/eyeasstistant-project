@@ -13,6 +13,7 @@ class ESLiveCameraScreen extends StatefulWidget {
 
 class _ESLiveCameraScreenState extends State<ESLiveCameraScreen> {
   CameraController? controller;
+  bool isDetecting = false;
 
   @override
   void initState() {
@@ -22,6 +23,13 @@ class _ESLiveCameraScreenState extends State<ESLiveCameraScreen> {
         return;
       }
       setState(() {});
+    });
+
+    controller?.startImageStream((CameraImage img) {
+      if (!isDetecting) {
+        isDetecting = true;
+        int startTime = DateTime.now().microsecondsSinceEpoch;
+      }
     });
     super.initState();
   }
