@@ -46,6 +46,23 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
+    # Online Storage For Files
+  firebase_storage: ^8.0.3
+
+  # Online Database For Data
+  cloud_firestore: ^1.0.5
+
+  # Add Authentication such as Google SignIn, Facebook SignIn, Apple SignIn, Phone Auth etc.
+  firebase_auth: ^1.1.0
+
+  ## And many more Firebase packages you could use
+  #firebase_messaging: ^9.1.1
+  #firebase_analytics: ^8.0.0
+  #firebase_dynamic_links: ^2.0.0
+  #cloud_functions: ^1.0.3
+  firebase_ml_vision: ^0.9.10
+  firebase_crashlytics: ^2.0.0  
+
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
