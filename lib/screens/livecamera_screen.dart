@@ -2,6 +2,7 @@ import 'package:camera/camera.dart';
 import 'package:eyeassistant/main.dart';
 import 'package:eyeassistant/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:tflite/tflite.dart';
 
 class ESLiveCameraScreen extends StatefulWidget {
@@ -12,6 +13,7 @@ class ESLiveCameraScreen extends StatefulWidget {
 }
 
 class _ESLiveCameraScreenState extends State<ESLiveCameraScreen> {
+  FlutterTts flutterTts = FlutterTts();
   CameraController? controller;
   bool isDetecting = false;
   String detectedImage = '';
@@ -53,6 +55,7 @@ class _ESLiveCameraScreenState extends State<ESLiveCameraScreen> {
             });
             setState(() {
               detectedImage;
+              speech();
               debugPrint(detectedImage);
             });
 
@@ -71,6 +74,11 @@ class _ESLiveCameraScreenState extends State<ESLiveCameraScreen> {
     await Tflite.close();
     controller?.dispose();
     super.dispose();
+  }
+
+  speech() {
+    flutterTts.speak(detectedImage);
+    flutterTts.setSpeechRate(0.8);
   }
 
   @override
