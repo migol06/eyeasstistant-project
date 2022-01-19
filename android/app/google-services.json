@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "609067563258",
-    "project_id": "eyessistant-8052e",
-    "storage_bucket": "eyessistant-8052e.appspot.com"
+    "project_number": "567414248792",
+    "project_id": "eyessistant-bd566",
+    "storage_bucket": "eyessistant-bd566.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:609067563258:android:7b1f3da6579814804e3143",
+        "mobilesdk_app_id": "1:567414248792:android:e933461ac9c1e3dd9ac12d",
         "android_client_info": {
           "package_name": "com.example.eyeassistant"
         }
       },
       "oauth_client": [
         {
-          "client_id": "609067563258-qes7hc4alosepsfv3v738tb98m3k5s03.apps.googleusercontent.com",
+          "client_id": "567414248792-0qnpkepngqkq2713pn4k6v2j6ja9rho3.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDvq-u01fNhpyBRwO99QAFtdZUG50Iu01A"
+          "current_key": "AIzaSyDz2UvBJebyItjkyZ-Q78FnWuj0_gwvabU"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "609067563258-qes7hc4alosepsfv3v738tb98m3k5s03.apps.googleusercontent.com",
+              "client_id": "567414248792-0qnpkepngqkq2713pn4k6v2j6ja9rho3.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
