@@ -15,13 +15,12 @@ class _ESLiveCameraScreenState extends State<ESLiveCameraScreen> {
   CameraController? controller;
   bool isDetecting = false;
   String detectedImage = '';
-  int endTime = 0;
 
   loadModel() async {
     String? res = await Tflite.loadModel(
         model: "assets/model/mobilenet_v1_1.0_224.tflite",
         labels: "assets/model/mobilenet_v1_1.0_224.txt");
-    print(res);
+    debugPrint(res);
   }
 
   @override
@@ -35,7 +34,6 @@ class _ESLiveCameraScreenState extends State<ESLiveCameraScreen> {
         controller?.startImageStream((CameraImage img) async {
           if (!isDetecting) {
             isDetecting = true;
-            int startTime = DateTime.now().microsecondsSinceEpoch;
             var recognitions = await Tflite.runModelOnFrame(
                 bytesList: img.planes.map((plane) {
                   return plane.bytes;
@@ -52,12 +50,10 @@ class _ESLiveCameraScreenState extends State<ESLiveCameraScreen> {
               detectedImage += response['label'] +
                   ' ' +
                   (response['confidence'] as double).toStringAsFixed(2);
-              int endTime = DateTime.now().millisecondsSinceEpoch;
             });
             setState(() {
               detectedImage;
-              print(detectedImage);
-              print('Detection took ${endTime - startTime}');
+              debugPrint(detectedImage);
             });
 
             isDetecting = false;
