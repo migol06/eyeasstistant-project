@@ -37,6 +37,7 @@ dependencies:
   camera: ^0.9.4+5
   flutter_launcher_icons: ^0.9.2
   tflite: ^1.1.2
+  flutter_tts: ^3.3.3
   firebase_core_web: ^1.5.3
 
 flutter_icons:
