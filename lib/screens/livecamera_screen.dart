@@ -80,9 +80,9 @@ class _ESLiveCameraScreenState extends State<ESLiveCameraScreen> {
     super.dispose();
   }
 
-  speech() {
-    flutterTts.speak(detectedImage);
-    flutterTts.setSpeechRate(0.8);
+  speech() async {
+    await flutterTts.speak(detectedImage);
+    await flutterTts.setSpeechRate(0.8);
   }
 
   @override
