@@ -1,12 +1,14 @@
 import 'package:camera/camera.dart';
 import 'package:eyeassistant/screens/screens.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 List<CameraDescription>? cameras;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   cameras = await availableCameras();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
