@@ -48,11 +48,15 @@ class _ESLiveCameraScreenState extends State<ESLiveCameraScreen> {
                 numResults: 1,
                 threshold: 0.1,
                 asynch: true);
-            recognitions?.forEach((response) {
-              detectedImage += response['label'] +
-                  ' ' +
-                  (response['confidence'] as double).toStringAsFixed(2);
-            });
+            for (var response in recognitions!) {
+              if ((response['confidence'] as double) >= 0.75) {
+                await Future.delayed(const Duration(seconds: 1));
+                detectedImage = response['label'];
+              } else {
+                await Future.delayed(const Duration(seconds: 1));
+                detectedImage = 'Can\'t recognize the Image';
+              }
+            }
             setState(() {
               detectedImage;
               speech();
