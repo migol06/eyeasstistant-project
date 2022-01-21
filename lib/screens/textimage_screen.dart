@@ -53,20 +53,21 @@ class _ESTextImageScreenState extends State<ESTextImageScreen> {
   }
 
   Widget _getButton() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        ElevatedButton(
-            onPressed: () {
-              getImage(ImageSource.camera);
-            },
-            child: const ESText('Camera')),
-        ElevatedButton(
-            onPressed: () {
-              getImage(ImageSource.gallery);
-            },
-            child: const ESText('Gallery'))
-      ],
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: const [
+          ESButton(
+              icon: Icons.camera_alt,
+              description: 'Camera',
+              color: ESColor.orange),
+          ESButton(
+              icon: Icons.photo_album,
+              description: 'Gallery',
+              color: ESColor.primaryBlue)
+        ],
+      ),
     );
   }
 
