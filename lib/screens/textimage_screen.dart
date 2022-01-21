@@ -47,7 +47,10 @@ class _ESTextImageScreenState extends State<ESTextImageScreen> {
         },
       ),
       body: Column(
-        children: [_blankContainer(context), _getButton()],
+        children: [
+          hasImage ? _imageContainer() : _blankContainer(context),
+          _getButton()
+        ],
       ),
     );
   }
@@ -57,15 +60,18 @@ class _ESTextImageScreenState extends State<ESTextImageScreen> {
       padding: const EdgeInsets.all(8.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: const [
+        children: [
           ESButton(
-              icon: Icons.camera_alt,
-              description: 'Camera',
-              color: ESColor.orange),
+            icon: Icons.camera_alt,
+            description: 'Camera',
+            color: ESColor.orange,
+            onTap: () => getImage(ImageSource.camera),
+          ),
           ESButton(
               icon: Icons.photo_album,
               description: 'Gallery',
-              color: ESColor.primaryBlue)
+              color: ESColor.primaryBlue,
+              onTap: () => getImage(ImageSource.gallery)),
         ],
       ),
     );
@@ -87,9 +93,35 @@ class _ESTextImageScreenState extends State<ESTextImageScreen> {
           title: const Text('Gallery'),
           onTap: () {
             getImage(ImageSource.gallery);
+            Navigator.pop(context);
           },
         )
       ],
+    );
+  }
+
+  Widget _imageContainer() {
+    return InkWell(
+      onTap: () {
+        showModalBottomSheet(
+            context: context,
+            builder: (context) {
+              return Container(
+                child: _bottomSheet(context),
+              );
+            });
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+            width: double.infinity,
+            height: MediaQuery.of(context).size.height / 2,
+            decoration: BoxDecoration(
+                border: Border.all(color: ESColor.gray, width: ESGrid.xxSmall),
+                borderRadius:
+                    const BorderRadius.all(Radius.circular(ESGrid.xSmall))),
+            child: Image.file(image!)),
+      ),
     );
   }
 
