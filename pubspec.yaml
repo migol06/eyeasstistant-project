@@ -40,6 +40,7 @@ dependencies:
   flutter_tts: ^3.3.3
   firebase_core_web: ^1.5.3
   image_picker: ^0.8.4+4
+  google_ml_kit: ^0.7.3
 
 flutter_icons:
   android: true
@@ -50,8 +51,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  firebase_ml_vision: ^0.9.10
-  firebase_crashlytics: ^2.0.0  
+  firebase_crashlytics: ^2.4.5  
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
