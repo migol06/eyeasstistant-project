@@ -4,6 +4,7 @@ import 'package:eyeassistant/widgets/constants/constants.dart';
 import 'package:eyeassistant/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ESTextImageScreen extends StatefulWidget {
@@ -16,6 +17,9 @@ class ESTextImageScreen extends StatefulWidget {
 class _ESTextImageScreenState extends State<ESTextImageScreen> {
   bool hasImage = false;
   File? image;
+  TextDetector textDetector = GoogleMlKit.vision.textDetector();
+  String? imagePath;
+  String scanText = '';
 
   Future getImage(ImageSource source) async {
     try {
@@ -24,10 +28,32 @@ class _ESTextImageScreenState extends State<ESTextImageScreen> {
       final imageTemporary = File(image.path);
       setState(() {
         this.image = imageTemporary;
+        imagePath = imageTemporary.path;
+        debugPrint(imagePath);
         hasImage = true;
       });
     } on PlatformException catch (e) {
       debugPrint('Failed to pick image: $e');
+    }
+  }
+
+  Future getText(String path) async {
+    final inputImage = InputImage.fromFilePath(path);
+    final RecognisedText recognisedText =
+        await textDetector.processImage(inputImage);
+
+    for (TextBlock block in recognisedText.blocks) {
+      for (TextLine line in block.lines) {
+        for (TextElement element in line.elements) {
+          setState(() {
+            scanText = scanText + element.text;
+            debugPrint(scanText);
+          });
+        }
+        setState(() {
+          scanText = scanText + '\n';
+        });
+      }
     }
   }
 
@@ -46,11 +72,14 @@ class _ESTextImageScreenState extends State<ESTextImageScreen> {
               children: [const ESText('Lorem Ipsum Dolor')]);
         },
       ),
-      body: Column(
-        children: [
-          hasImage ? _imageContainer() : _blankContainer(context),
-          _getButton()
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            hasImage ? _imageContainer() : _blankContainer(context),
+            _getButton(),
+            ESText(scanText)
+          ],
+        ),
       ),
     );
   }
@@ -65,13 +94,15 @@ class _ESTextImageScreenState extends State<ESTextImageScreen> {
             icon: Icons.camera_alt,
             description: 'Camera',
             color: ESColor.orange,
-            onTap: () => getImage(ImageSource.camera),
+            onTap: () {
+              getImage(ImageSource.camera);
+            },
           ),
           ESButton(
               icon: Icons.photo_album,
-              description: 'Gallery',
+              description: 'Scan',
               color: ESColor.primaryBlue,
-              onTap: () => getImage(ImageSource.gallery)),
+              onTap: () => getText(imagePath!)),
         ],
       ),
     );
