@@ -46,7 +46,7 @@ class _ESTextImageScreenState extends State<ESTextImageScreen> {
       for (TextLine line in block.lines) {
         for (TextElement element in line.elements) {
           setState(() {
-            scanText = scanText + '   ' + element.text;
+            scanText = scanText + '  ' + element.text;
             debugPrint(scanText);
           });
         }
