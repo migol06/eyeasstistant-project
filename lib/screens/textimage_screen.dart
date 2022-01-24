@@ -109,6 +109,7 @@ class _ESTextImageScreenState extends State<ESTextImageScreen> {
 
   Column _bottomSheet(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         ListTile(
           leading: const Icon(Icons.camera_alt),
@@ -135,6 +136,8 @@ class _ESTextImageScreenState extends State<ESTextImageScreen> {
       onTap: () {
         showModalBottomSheet(
             context: context,
+            shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
             builder: (context) {
               return Container(
                 child: _bottomSheet(context),
