@@ -21,31 +21,30 @@ class ESButton extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Container(
-        width: MediaQuery.of(context).size.width * .40,
+        width: MediaQuery.of(context).size.width * .20,
+        height: MediaQuery.of(context).size.height * .15,
         decoration: BoxDecoration(
           color: color,
           borderRadius: const BorderRadius.all(Radius.circular(ESGrid.small)),
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(ESGrid.large),
-          child: Column(
-            children: [
-              Icon(
-                icon,
-                color: Colors.white,
-                size: 40,
-              ),
-              const SizedBox(
-                height: ESGrid.small,
-              ),
-              ESText(
-                description,
-                color: Colors.white,
-                size: ESTextSize.large,
-                weight: ESTextWeight.bold,
-              )
-            ],
-          ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              color: Colors.white,
+              size: 30,
+            ),
+            const SizedBox(
+              height: ESGrid.small,
+            ),
+            ESText(
+              description,
+              color: Colors.white,
+              size: ESTextSize.medium,
+              weight: ESTextWeight.bold,
+            )
+          ],
         ),
       ),
     );

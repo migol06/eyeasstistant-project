@@ -92,14 +92,21 @@ class _ESTextImageScreenState extends State<ESTextImageScreen> {
             icon: Icons.camera_alt,
             description: 'Camera',
             color: ESColor.orange,
-            onTap: () {
-              getImage(ImageSource.camera);
-              // getText(imagePath!);
-            },
+            onTap: () => getImage(ImageSource.camera),
           ),
           ESButton(
-              icon: Icons.photo_album,
+              icon: Icons.collections_outlined,
+              description: 'Gallery',
+              color: ESColor.primaryBlue,
+              onTap: () => getText(imagePath!)),
+          ESButton(
+              icon: Icons.document_scanner_outlined,
               description: 'Scan',
+              color: ESColor.primaryBlue,
+              onTap: () => getText(imagePath!)),
+          ESButton(
+              icon: Icons.clear_outlined,
+              description: 'Clear',
               color: ESColor.primaryBlue,
               onTap: () => getText(imagePath!)),
         ],
