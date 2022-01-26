@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:clipboard/clipboard.dart';
 
 class ESTextImageScreen extends StatefulWidget {
   const ESTextImageScreen({Key? key}) : super(key: key);
@@ -68,7 +69,8 @@ class _ESTextImageScreenState extends State<ESTextImageScreen> {
     await flutterTts.stop();
   }
 
-  speech() async {
+  Future speech() async {
+    await flutterTts.setLanguage('fil-PH');
     await flutterTts.speak(scanText);
   }
 
@@ -92,11 +94,23 @@ class _ESTextImageScreenState extends State<ESTextImageScreen> {
           children: [
             hasImage ? _imageContainer() : _blankContainer(context),
             _getButton(),
-            ESText(scanText)
+            ESTextArea(text: scanText, onTap: copyToClipBoard),
+            const SizedBox(
+              height: ESGrid.large,
+            )
           ],
         ),
       ),
     );
+  }
+
+  void copyToClipBoard() {
+    if (scanText.trim() != '') {
+      FlutterClipboard.copy(scanText);
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text("Copy Text"),
+      ));
+    }
   }
 
   Widget _getButton() {
