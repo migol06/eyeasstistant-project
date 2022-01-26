@@ -4,6 +4,7 @@ import 'package:eyeassistant/widgets/constants/constants.dart';
 import 'package:eyeassistant/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -20,6 +21,7 @@ class _ESTextImageScreenState extends State<ESTextImageScreen> {
   TextDetector textDetector = GoogleMlKit.vision.textDetector();
   String? imagePath;
   String scanText = '';
+  FlutterTts flutterTts = FlutterTts();
 
   Future getImage(ImageSource source) async {
     try {
@@ -53,6 +55,21 @@ class _ESTextImageScreenState extends State<ESTextImageScreen> {
         scanText = scanText + '\n';
       }
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Future<void> dispose() async {
+    super.dispose();
+    await flutterTts.stop();
+  }
+
+  speech() async {
+    await flutterTts.speak(scanText);
   }
 
   @override
@@ -103,7 +120,14 @@ class _ESTextImageScreenState extends State<ESTextImageScreen> {
               icon: Icons.document_scanner_outlined,
               description: 'Scan',
               color: ESColor.primaryBlue,
-              onTap: () => getText(imagePath!)),
+              onTap: () async {
+                getText(imagePath!);
+                await Future.delayed(const Duration(seconds: 2), () {
+                  setState(() {
+                    speech();
+                  });
+                });
+              }),
           ESButton(
               icon: Icons.clear_outlined,
               description: 'Clear',
