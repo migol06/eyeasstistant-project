@@ -49,7 +49,7 @@ class _ESLiveCameraScreenState extends State<ESLiveCameraScreen> {
                 threshold: 0.1,
                 asynch: true);
             for (var response in recognitions!) {
-              if ((response['confidence'] as double) >= 0.75) {
+              if ((response['confidence'] as double) >= 0.60) {
                 await Future.delayed(const Duration(seconds: 1));
                 detectedImage = response['label'];
               } else {
@@ -75,9 +75,9 @@ class _ESLiveCameraScreenState extends State<ESLiveCameraScreen> {
 
   @override
   void dispose() async {
+    super.dispose();
     await Tflite.close();
     controller?.dispose();
-    super.dispose();
   }
 
   speech() async {
