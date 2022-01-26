@@ -97,8 +97,8 @@ class _ESTextImageScreenState extends State<ESTextImageScreen> {
           ESButton(
               icon: Icons.collections_outlined,
               description: 'Gallery',
-              color: ESColor.primaryBlue,
-              onTap: () => getText(imagePath!)),
+              color: Colors.green,
+              onTap: () => getImage(ImageSource.gallery)),
           ESButton(
               icon: Icons.document_scanner_outlined,
               description: 'Scan',
@@ -107,8 +107,13 @@ class _ESTextImageScreenState extends State<ESTextImageScreen> {
           ESButton(
               icon: Icons.clear_outlined,
               description: 'Clear',
-              color: ESColor.primaryBlue,
-              onTap: () => getText(imagePath!)),
+              color: Colors.red,
+              onTap: () {
+                setState(() {
+                  scanText = '';
+                  hasImage = false;
+                });
+              }),
         ],
       ),
     );
