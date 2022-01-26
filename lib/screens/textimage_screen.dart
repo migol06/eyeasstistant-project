@@ -109,20 +109,26 @@ class _ESTextImageScreenState extends State<ESTextImageScreen> {
             icon: Icons.camera_alt,
             description: 'Camera',
             color: ESColor.orange,
-            onTap: () => getImage(ImageSource.camera),
+            onTap: () {
+              getImage(ImageSource.camera);
+              scanText = '';
+            },
           ),
           ESButton(
               icon: Icons.collections_outlined,
               description: 'Gallery',
               color: Colors.green,
-              onTap: () => getImage(ImageSource.gallery)),
+              onTap: () {
+                getImage(ImageSource.gallery);
+                scanText = '';
+              }),
           ESButton(
               icon: Icons.document_scanner_outlined,
               description: 'Scan',
               color: ESColor.primaryBlue,
               onTap: () async {
                 getText(imagePath!);
-                await Future.delayed(const Duration(seconds: 2), () {
+                await Future.delayed(const Duration(seconds: 5), () {
                   setState(() {
                     speech();
                   });
@@ -152,6 +158,7 @@ class _ESTextImageScreenState extends State<ESTextImageScreen> {
           title: const Text('Camera'),
           onTap: () {
             getImage(ImageSource.camera);
+            scanText = '';
             Navigator.pop(context);
           },
         ),
@@ -160,6 +167,7 @@ class _ESTextImageScreenState extends State<ESTextImageScreen> {
           title: const Text('Gallery'),
           onTap: () {
             getImage(ImageSource.gallery);
+            scanText = '';
             Navigator.pop(context);
           },
         )
