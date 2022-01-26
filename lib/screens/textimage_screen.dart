@@ -69,7 +69,7 @@ class _ESTextImageScreenState extends State<ESTextImageScreen> {
     await flutterTts.stop();
   }
 
-  Future speech() async {
+  Future _speech() async {
     await flutterTts.setLanguage('fil-PH');
     await flutterTts.speak(scanText);
   }
@@ -144,7 +144,7 @@ class _ESTextImageScreenState extends State<ESTextImageScreen> {
                 getText(imagePath!);
                 await Future.delayed(const Duration(seconds: 5), () {
                   setState(() {
-                    speech();
+                    _speech();
                   });
                 });
               }),
