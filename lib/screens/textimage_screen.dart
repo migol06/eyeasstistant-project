@@ -20,9 +20,11 @@ class _ESTextImageScreenState extends State<ESTextImageScreen> {
   bool hasImage = false;
   File? image;
   TextDetector textDetector = GoogleMlKit.vision.textDetector();
-  String? imagePath;
+  late String imagePath;
   String scanText = '';
   FlutterTts flutterTts = FlutterTts();
+  String camera = 'Camera';
+  String gallery = 'Gallery';
 
   Future getImage(ImageSource source) async {
     try {
@@ -70,7 +72,6 @@ class _ESTextImageScreenState extends State<ESTextImageScreen> {
   }
 
   Future _speech() async {
-    await flutterTts.setLanguage('fil-PH');
     await flutterTts.speak(scanText);
   }
 
@@ -121,32 +122,43 @@ class _ESTextImageScreenState extends State<ESTextImageScreen> {
         children: [
           ESButton(
             icon: Icons.camera_alt,
-            description: 'Camera',
+            description: camera,
             color: ESColor.orange,
             onTap: () {
               getImage(ImageSource.camera);
               scanText = '';
+              flutterTts.speak(camera);
             },
           ),
           ESButton(
               icon: Icons.collections_outlined,
-              description: 'Gallery',
+              description: gallery,
               color: Colors.green,
               onTap: () {
                 getImage(ImageSource.gallery);
                 scanText = '';
+                flutterTts.speak(gallery);
               }),
           ESButton(
               icon: Icons.document_scanner_outlined,
               description: 'Scan',
               color: ESColor.primaryBlue,
               onTap: () async {
-                getText(imagePath!);
-                await Future.delayed(const Duration(seconds: 5), () {
-                  setState(() {
-                    _speech();
+                if (scanText.isEmpty && hasImage) {
+                  getText(imagePath);
+                  await Future.delayed(const Duration(seconds: 5), () {
+                    setState(() {
+                      _speech();
+                    });
                   });
-                });
+                } else if (!hasImage) {
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                    content: Text('Please add an Image'),
+                  ));
+                  flutterTts.speak('Scan, Please add an Image');
+                } else {
+                  _speech();
+                }
               }),
           ESButton(
               icon: Icons.clear_outlined,
@@ -156,6 +168,8 @@ class _ESTextImageScreenState extends State<ESTextImageScreen> {
                 setState(() {
                   scanText = '';
                   hasImage = false;
+                  flutterTts.stop();
+                  imagePath = '';
                 });
               }),
         ],
@@ -169,18 +183,20 @@ class _ESTextImageScreenState extends State<ESTextImageScreen> {
       children: [
         ListTile(
           leading: const Icon(Icons.camera_alt),
-          title: const Text('Camera'),
+          title: Text(camera),
           onTap: () {
             getImage(ImageSource.camera);
             scanText = '';
+            flutterTts.stop();
             Navigator.pop(context);
           },
         ),
         ListTile(
           leading: const Icon(Icons.photo_album),
-          title: const Text('Gallery'),
+          title: Text(gallery),
           onTap: () {
             getImage(ImageSource.gallery);
+            flutterTts.stop();
             scanText = '';
             Navigator.pop(context);
           },

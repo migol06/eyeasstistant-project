@@ -20,7 +20,10 @@ class ESTextArea extends StatelessWidget {
             decoration: BoxDecoration(border: Border.all()),
             padding: const EdgeInsets.all(8),
             alignment: Alignment.center,
-            child: SelectableText(text),
+            child: SelectableText(
+              text,
+              style: const TextStyle(fontSize: 15),
+            ),
           ),
           IconButton(
               onPressed: onTap,
