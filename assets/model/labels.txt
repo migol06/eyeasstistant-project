@@ -1,0 +1,11 @@
+bottle
+bowl
+clock
+mobile_phone
+pen
+plate
+shirt
+soap_dispenser
+sunglasses
+toothbrush
+watch
