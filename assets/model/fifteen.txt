@@ -1,0 +1,15 @@
+Spoon
+bottle
+bowl
+clock
+fork
+knife
+light switch
+mobile phone
+pen
+remote_control
+scissors
+shirt
+sunglasses
+toothbrush
+watch

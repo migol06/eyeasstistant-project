@@ -20,8 +20,8 @@ class _ESLiveCameraScreenState extends State<ESLiveCameraScreen> {
 
   loadModel() async {
     String? res = await Tflite.loadModel(
-        model: "assets/model/fourteenmodels.tflite",
-        labels: "assets/model/fourteenmodels.txt");
+        model: "assets/model/fifteenmodels.tflite",
+        labels: "assets/model/fifteen.txt");
     debugPrint(res);
   }
 
