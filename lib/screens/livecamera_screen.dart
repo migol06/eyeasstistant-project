@@ -20,8 +20,8 @@ class _ESLiveCameraScreenState extends State<ESLiveCameraScreen> {
 
   loadModel() async {
     String? res = await Tflite.loadModel(
-        model: "assets/model/mobilenet_v1_1.0_224.tflite",
-        labels: "assets/model/mobilenet_v1_1.0_224.txt");
+        model: "assets/model/fifteenmodels.tflite",
+        labels: "assets/model/fifteen.txt");
     debugPrint(res);
   }
 
@@ -48,20 +48,24 @@ class _ESLiveCameraScreenState extends State<ESLiveCameraScreen> {
                 numResults: 1,
                 threshold: 0.1,
                 asynch: true);
+
             for (var response in recognitions!) {
-              if ((response['confidence'] as double) >= 0.60) {
-                await Future.delayed(const Duration(seconds: 1));
-                detectedImage = response['label'];
-              } else {
-                await Future.delayed(const Duration(seconds: 1));
-                detectedImage = 'Can\'t recognize the Image';
-              }
+              // if ((response['confidence'] as double) >= 0.10) {
+              await Future.delayed(const Duration(seconds: 1));
+              detectedImage = response['label'];
+              // } else {
+              // await Future.delayed(const Duration(seconds: 1));
+              // detectedImage = 'Can\'t recognize the Image';
+              // }
             }
-            setState(() {
-              detectedImage;
-              _speech();
-              debugPrint(detectedImage);
-            });
+
+            if (mounted) {
+              setState(() {
+                detectedImage;
+                _speech();
+                debugPrint(detectedImage);
+              });
+            }
 
             isDetecting = false;
           }
@@ -78,6 +82,7 @@ class _ESLiveCameraScreenState extends State<ESLiveCameraScreen> {
     super.dispose();
     await Tflite.close();
     controller?.dispose();
+    flutterTts.stop();
   }
 
   Future _speech() async {
