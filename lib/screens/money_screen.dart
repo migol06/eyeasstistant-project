@@ -1,40 +1,81 @@
-import 'package:camera/camera.dart';
-import 'package:eyeassistant/main.dart';
+import 'package:eyeassistant/camera.dart';
 import 'package:eyeassistant/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
-class ESMoneyRecognition extends StatefulWidget {
-  const ESMoneyRecognition({Key? key}) : super(key: key);
+class ESMoneyIdentifier extends StatefulWidget {
+  const ESMoneyIdentifier({Key? key}) : super(key: key);
 
   @override
-  State<ESMoneyRecognition> createState() => _ESMoneyRecognitionState();
+  State<ESMoneyIdentifier> createState() => _ESMoneyIdentifierState();
 }
 
-class _ESMoneyRecognitionState extends State<ESMoneyRecognition> {
-  CameraController? _controller;
+class _ESMoneyIdentifierState extends State<ESMoneyIdentifier> {
+  Camera camera = Camera();
+  String? imagePath;
+  bool hasImage = false;
 
-  @override
-  void initState() {
-    _controller = CameraController(cameras![0], ResolutionPreset.max);
-    _controller?.initialize().then((value) {
-      if (!mounted) {
-        return;
-      }
-      setState(() {});
+  Future<void> getImage(ImageSource source) async {
+    await camera.getImage(source);
+    setState(() {
+      hasImage = true;
+      imagePath = camera.image?.path;
     });
-    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: ESAppBar(
-        onTap: () {},
+        onTap: () {
+          showAboutDialog(
+              context: context,
+              applicationName: 'Text Image Screen',
+              applicationIcon: Image.asset(
+                'assets/images/eyessistant.png',
+                scale: 5,
+              ),
+              children: [const ESText('Lorem Ipsum Dolor')]);
+        },
       ),
-      body: Stack(children: [
-        Center(child: CameraPreview(_controller!)),
-        // ESText(detectedImage)
-      ]),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: imageContainer(context),
+          ),
+          ElevatedButton(
+              onPressed: () {
+                getImage(ImageSource.camera);
+              },
+              child: const Text('Camera')),
+          ElevatedButton(
+              onPressed: () {
+                getImage(ImageSource.gallery);
+              },
+              child: const Text('Gallery')),
+          ElevatedButton(
+              onPressed: () {
+                // processImageWithRemoteModel(imagePath);
+                // processImage();
+              },
+              child: const Text('Scan')),
+          Text(
+            'Hello',
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget imageContainer(BuildContext context) {
+    return Container(
+      child: hasImage ? Image.file(camera.image!) : const Text('Text'),
+      width: double.infinity,
+      height: MediaQuery.of(context).size.height / 2,
+      decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey, width: 5.0),
+          borderRadius: const BorderRadius.all(Radius.circular(10.0))),
     );
   }
 }

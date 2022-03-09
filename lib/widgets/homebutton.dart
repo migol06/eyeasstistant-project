@@ -8,13 +8,15 @@ class ESHomeButton extends StatelessWidget {
   final String desc;
   final Color backGroundColor;
   final VoidCallback? onTap;
+  final IconData iconData;
 
   const ESHomeButton(
       {Key? key,
       required this.title,
       required this.desc,
       required this.backGroundColor,
-      this.onTap})
+      this.onTap,
+      required this.iconData})
       : super(key: key);
 
   @override
@@ -38,7 +40,11 @@ class ESHomeButton extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  _getIcon(),
+                  Icon(
+                    iconData,
+                    color: Colors.white,
+                    size: ESGrid.xxLarge,
+                  ),
                 ],
               ),
               const SizedBox(
