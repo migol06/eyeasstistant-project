@@ -1,4 +1,5 @@
 import 'package:eyeassistant/camera.dart';
+import 'package:eyeassistant/widgets/constants/constants.dart';
 import 'package:eyeassistant/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -11,15 +12,17 @@ class ESMoneyIdentifier extends StatefulWidget {
 }
 
 class _ESMoneyIdentifierState extends State<ESMoneyIdentifier> {
-  Camera camera = Camera();
+  Camera image = Camera();
   String? imagePath;
   bool hasImage = false;
+  String camera = 'Camera';
+  String gallery = 'Gallery';
 
   Future<void> getImage(ImageSource source) async {
-    await camera.getImage(source);
+    await image.getImage(source);
     setState(() {
       hasImage = true;
-      imagePath = camera.image?.path;
+      imagePath = image.image?.path;
     });
   }
 
@@ -71,13 +74,73 @@ class _ESMoneyIdentifierState extends State<ESMoneyIdentifier> {
   }
 
   Widget imageContainer(BuildContext context) {
-    return Container(
-      child: hasImage ? Image.file(camera.image!) : const Text('Text'),
-      width: double.infinity,
-      height: MediaQuery.of(context).size.height / 2,
-      decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey, width: 5.0),
-          borderRadius: const BorderRadius.all(Radius.circular(10.0))),
+    return InkWell(
+      onTap: () {
+        showModalBottomSheet(
+            context: context,
+            shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+            builder: (context) {
+              return Container(
+                child: _bottomSheet(context),
+              );
+            });
+      },
+      child: Container(
+        child: hasImage ? Image.file(image.image!) : getChildContainer(),
+        width: double.infinity,
+        height: MediaQuery.of(context).size.height / 2,
+        decoration: BoxDecoration(
+            border: Border.all(color: ESColor.gray, width: ESGrid.xxSmall),
+            borderRadius:
+                const BorderRadius.all(Radius.circular(ESGrid.xSmall))),
+      ),
+    );
+  }
+
+  Column _bottomSheet(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        ListTile(
+          leading: const Icon(Icons.camera_alt),
+          title: const Text('Camera'),
+          onTap: () {
+            getImage(ImageSource.camera);
+            // scanText = '';
+            // flutterTts.stop();
+            Navigator.pop(context);
+          },
+        ),
+        ListTile(
+          leading: const Icon(Icons.photo_album),
+          title: const Text('Gallery'),
+          onTap: () {
+            getImage(ImageSource.gallery);
+            // flutterTts.stop();
+            // scanText = '';
+            Navigator.pop(context);
+          },
+        )
+      ],
+    );
+  }
+
+  Column getChildContainer() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: const [
+        Icon(
+          Icons.image_outlined,
+        ),
+        SizedBox(
+          height: ESGrid.medium,
+        ),
+        ESText(
+          'Max file size 10MB, Minimum \nResolution 1024 x 1024',
+          textAlign: TextAlign.center,
+        )
+      ],
     );
   }
 }
