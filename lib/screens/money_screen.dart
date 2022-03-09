@@ -2,6 +2,7 @@ import 'package:eyeassistant/camera.dart';
 import 'package:eyeassistant/widgets/constants/constants.dart';
 import 'package:eyeassistant/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tflite/tflite.dart';
 
@@ -14,6 +15,7 @@ class ESMoneyIdentifier extends StatefulWidget {
 
 class _ESMoneyIdentifierState extends State<ESMoneyIdentifier> {
   Camera image = Camera();
+  FlutterTts flutterTts = FlutterTts();
   String? imagePath;
   bool hasImage = false;
   String camera = 'Camera';
@@ -52,11 +54,24 @@ class _ESMoneyIdentifierState extends State<ESMoneyIdentifier> {
     for (var output in recognitions!) {
       debugPrint(output.toString());
       if (mounted) {
-        setState(() {
-          result += output['label'].toString() + '\n';
-        });
+        if (output['confidence'] > .5) {
+          setState(() {
+            result += output['label'].toString() + '\n';
+            outputTTS();
+          });
+        } else {
+          outputTTSerror();
+        }
       }
     }
+  }
+
+  outputTTS() async {
+    await flutterTts.speak('You have $result');
+  }
+
+  outputTTSerror() async {
+    await flutterTts.speak('Can not recognize the image. Try Again');
   }
 
   @override
@@ -68,6 +83,7 @@ class _ESMoneyIdentifierState extends State<ESMoneyIdentifier> {
   @override
   void dispose() {
     Tflite.close();
+    flutterTts.stop();
     super.dispose();
   }
 
@@ -97,7 +113,7 @@ class _ESMoneyIdentifierState extends State<ESMoneyIdentifier> {
           _getButton(),
           ESText(
             result,
-            size: ESTextSize.large,
+            size: ESTextSize.xxLarge,
           )
         ],
       ),
