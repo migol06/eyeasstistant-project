@@ -25,6 +25,7 @@ class _ESMoneyIdentifierState extends State<ESMoneyIdentifier> {
     setState(() {
       hasImage = true;
       imagePath = image.image?.path;
+      processImage();
     });
   }
 
@@ -32,25 +33,21 @@ class _ESMoneyIdentifierState extends State<ESMoneyIdentifier> {
     String? res = await Tflite.loadModel(
         model: "assets/model/ph_currency.tflite",
         labels: "assets/model/ph_currency.txt",
-        numThreads: 1, // defaults to 1
-        isAsset:
-            true, // defaults to true, set to false to load resources outside assets
-        useGpuDelegate:
-            false // defaults to false, set to true to use GPU delegate
-        );
+        numThreads: 1,
+        isAsset: true,
+        useGpuDelegate: false);
 
     debugPrint(res);
   }
 
   Future<void> processImage() async {
     var recognitions = await Tflite.runModelOnImage(
-        path: imagePath!, // required
-        imageMean: 0.0, // defaults to 117.0
-        imageStd: 255.0, // defaults to 1.0
-        numResults: 2, // defaults to 5
-        threshold: 0.2, // defaults to 0.1
-        asynch: true // defaults to true
-        );
+        path: imagePath!,
+        imageMean: 0.0,
+        imageStd: 255.0,
+        numResults: 2,
+        threshold: 0.2,
+        asynch: true);
 
     for (var output in recognitions!) {
       debugPrint(output.toString());
@@ -113,59 +110,35 @@ class _ESMoneyIdentifierState extends State<ESMoneyIdentifier> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          ESButton(
-            icon: Icons.camera_alt,
-            description: 'Camera',
-            color: ESColor.orange,
-            onTap: () {
-              getImage(ImageSource.camera);
-              // scanText = '';
-              // flutterTts.speak(camera);
-            },
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ESButton(
+                icon: Icons.camera_alt,
+                description: 'Camera',
+                color: ESColor.orange,
+                onTap: () {
+                  getImage(ImageSource.camera);
+                  result = '';
+                  // flutterTts.speak(camera);
+                },
+              ),
+            ),
           ),
-          ESButton(
-              icon: Icons.collections_outlined,
-              description: 'Gallery',
-              color: Colors.green,
-              onTap: () {
-                getImage(ImageSource.gallery);
-                // scanText = '';
-                // flutterTts.speak(gallery);
-              }),
-          ESButton(
-              icon: Icons.document_scanner_outlined,
-              description: 'Scan',
-              color: ESColor.primaryBlue,
-              onTap: () {
-                processImage();
-                // if (scanText.isEmpty && hasImage) {
-                //   getText(imagePath);
-                //   await Future.delayed(const Duration(seconds: 5), () {
-                //     setState(() {
-                //       _speech();
-                //     });
-                //   });
-                // } else if (!hasImage) {
-                //   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                //     content: Text('Please add an Image'),
-                //   ));
-                //   flutterTts.speak('Scan, Please add an Image');
-                // } else {
-                //   _speech();
-                // }
-              }),
-          ESButton(
-              icon: Icons.clear_outlined,
-              description: 'Clear',
-              color: Colors.red,
-              onTap: () {
-                setState(() {
-                  // scanText = '';
-                  hasImage = false;
-                  // flutterTts.stop();
-                  imagePath = '';
-                });
-              }),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ESButton(
+                  icon: Icons.collections_outlined,
+                  description: 'Gallery',
+                  color: ESColor.primaryBlue,
+                  onTap: () {
+                    getImage(ImageSource.gallery);
+                    result = '';
+                    // flutterTts.speak(gallery);
+                  }),
+            ),
+          ),
         ],
       ),
     );
@@ -205,7 +178,7 @@ class _ESMoneyIdentifierState extends State<ESMoneyIdentifier> {
           title: const Text('Camera'),
           onTap: () {
             getImage(ImageSource.camera);
-            // scanText = '';
+            result = '';
             // flutterTts.stop();
             Navigator.pop(context);
           },
@@ -216,7 +189,7 @@ class _ESMoneyIdentifierState extends State<ESMoneyIdentifier> {
           onTap: () {
             getImage(ImageSource.gallery);
             // flutterTts.stop();
-            // scanText = '';
+            result = '';
             Navigator.pop(context);
           },
         )
