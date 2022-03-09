@@ -3,26 +3,27 @@ import 'constants/constants.dart';
 
 class ESAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback? onTap;
+  final String title;
+  final Color color;
 
   const ESAppBar({
     Key? key,
     this.onTap,
+    required this.title,
+    required this.color,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: Image.asset(
-        'assets/images/eyessistant.png',
-        scale: 3,
-      ),
+      title: Text(title),
       leading: IconButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
           icon: const Icon(
             Icons.arrow_back_ios,
-            color: ESColor.orange,
+            color: Colors.white,
           )),
       actions: [
         Padding(
@@ -31,12 +32,12 @@ class ESAppBar extends StatelessWidget implements PreferredSizeWidget {
             onTap: onTap,
             child: const Icon(
               Icons.help_outline,
-              color: ESColor.orange,
+              color: Colors.white,
             ),
           ),
         )
       ],
-      backgroundColor: ESColor.athensGray,
+      backgroundColor: color,
       toolbarHeight: 60,
       shadowColor: ESColor.gray.withOpacity(.3),
       centerTitle: true,

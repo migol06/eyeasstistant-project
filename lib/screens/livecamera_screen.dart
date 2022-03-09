@@ -1,5 +1,6 @@
 import 'package:camera/camera.dart';
 import 'package:eyeassistant/main.dart';
+import 'package:eyeassistant/widgets/constants/constants.dart';
 import 'package:eyeassistant/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
@@ -93,6 +94,7 @@ class _ESLiveCameraScreenState extends State<ESLiveCameraScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: ESAppBar(
+        color: ESColor.primaryBlue,
         onTap: () {
           showAboutDialog(
               context: context,
@@ -103,6 +105,7 @@ class _ESLiveCameraScreenState extends State<ESLiveCameraScreen> {
               ),
               children: [const ESText('Lorem Ipsum Dolor')]);
         },
+        title: 'Live Camera',
       ),
       body: Stack(children: [
         Center(child: CameraPreview(controller!)),

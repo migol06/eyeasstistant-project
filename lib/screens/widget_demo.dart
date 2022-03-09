@@ -42,13 +42,13 @@ class _ESWidgetDemoState extends State<ESWidgetDemo> {
             const SizedBox(
               height: ESGrid.large,
             ),
-            ESAppBar(
-              onTap: () {
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  content: Text("Sending Message"),
-                ));
-              },
-            ),
+            // ESAppBar(
+            //   onTap: () {
+            //     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            //       content: Text("Sending Message"),
+            //     ));
+            //   },
+            // ),
             const SizedBox(
               height: ESGrid.large,
             ),

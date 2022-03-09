@@ -87,7 +87,7 @@ class ESHomeScreen extends StatelessWidget {
                         height: ESGrid.medium,
                       ),
                       ESHomeButton(
-                        title: "Money Detector",
+                        title: "Money Identifier",
                         desc: 'Lorem ipsum Dolor',
                         backGroundColor: Colors.green[700]!,
                         onTap: () {

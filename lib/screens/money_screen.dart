@@ -37,6 +37,8 @@ class _ESMoneyIdentifierState extends State<ESMoneyIdentifier> {
               ),
               children: [const ESText('Lorem Ipsum Dolor')]);
         },
+        color: Colors.green[700]!,
+        title: 'Money Identifier',
       ),
       body: Column(
         children: [
