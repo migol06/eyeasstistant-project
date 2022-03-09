@@ -3,6 +3,7 @@ import 'package:eyeassistant/widgets/constants/constants.dart';
 import 'package:eyeassistant/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:tflite/tflite.dart';
 
 class ESMoneyIdentifier extends StatefulWidget {
   const ESMoneyIdentifier({Key? key}) : super(key: key);
@@ -17,6 +18,7 @@ class _ESMoneyIdentifierState extends State<ESMoneyIdentifier> {
   bool hasImage = false;
   String camera = 'Camera';
   String gallery = 'Gallery';
+  String result = '';
 
   Future<void> getImage(ImageSource source) async {
     await image.getImage(source);
@@ -24,6 +26,52 @@ class _ESMoneyIdentifierState extends State<ESMoneyIdentifier> {
       hasImage = true;
       imagePath = image.image?.path;
     });
+  }
+
+  loadModel() async {
+    String? res = await Tflite.loadModel(
+        model: "assets/model/ph_currency.tflite",
+        labels: "assets/model/ph_currency.txt",
+        numThreads: 1, // defaults to 1
+        isAsset:
+            true, // defaults to true, set to false to load resources outside assets
+        useGpuDelegate:
+            false // defaults to false, set to true to use GPU delegate
+        );
+
+    debugPrint(res);
+  }
+
+  Future<void> processImage() async {
+    var recognitions = await Tflite.runModelOnImage(
+        path: imagePath!, // required
+        imageMean: 0.0, // defaults to 117.0
+        imageStd: 255.0, // defaults to 1.0
+        numResults: 2, // defaults to 5
+        threshold: 0.2, // defaults to 0.1
+        asynch: true // defaults to true
+        );
+
+    for (var output in recognitions!) {
+      debugPrint(output.toString());
+      if (mounted) {
+        setState(() {
+          result += output['label'].toString() + '\n';
+        });
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    loadModel();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    Tflite.close();
+    super.dispose();
   }
 
   @override
@@ -49,25 +97,75 @@ class _ESMoneyIdentifierState extends State<ESMoneyIdentifier> {
             padding: const EdgeInsets.all(8.0),
             child: imageContainer(context),
           ),
-          ElevatedButton(
-              onPressed: () {
-                getImage(ImageSource.camera);
-              },
-              child: const Text('Camera')),
-          ElevatedButton(
-              onPressed: () {
-                getImage(ImageSource.gallery);
-              },
-              child: const Text('Gallery')),
-          ElevatedButton(
-              onPressed: () {
-                // processImageWithRemoteModel(imagePath);
-                // processImage();
-              },
-              child: const Text('Scan')),
-          Text(
-            'Hello',
+          _getButton(),
+          ESText(
+            result,
+            size: ESTextSize.large,
           )
+        ],
+      ),
+    );
+  }
+
+  Widget _getButton() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          ESButton(
+            icon: Icons.camera_alt,
+            description: 'Camera',
+            color: ESColor.orange,
+            onTap: () {
+              getImage(ImageSource.camera);
+              // scanText = '';
+              // flutterTts.speak(camera);
+            },
+          ),
+          ESButton(
+              icon: Icons.collections_outlined,
+              description: 'Gallery',
+              color: Colors.green,
+              onTap: () {
+                getImage(ImageSource.gallery);
+                // scanText = '';
+                // flutterTts.speak(gallery);
+              }),
+          ESButton(
+              icon: Icons.document_scanner_outlined,
+              description: 'Scan',
+              color: ESColor.primaryBlue,
+              onTap: () {
+                processImage();
+                // if (scanText.isEmpty && hasImage) {
+                //   getText(imagePath);
+                //   await Future.delayed(const Duration(seconds: 5), () {
+                //     setState(() {
+                //       _speech();
+                //     });
+                //   });
+                // } else if (!hasImage) {
+                //   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                //     content: Text('Please add an Image'),
+                //   ));
+                //   flutterTts.speak('Scan, Please add an Image');
+                // } else {
+                //   _speech();
+                // }
+              }),
+          ESButton(
+              icon: Icons.clear_outlined,
+              description: 'Clear',
+              color: Colors.red,
+              onTap: () {
+                setState(() {
+                  // scanText = '';
+                  hasImage = false;
+                  // flutterTts.stop();
+                  imagePath = '';
+                });
+              }),
         ],
       ),
     );
