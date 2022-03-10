@@ -1,16 +1,10 @@
-// import 'package:eyeassistant/camera.dart';
-import 'package:eyeassistant/image-classifier/classifier.dart';
-import 'package:eyeassistant/image-classifier/classifier_quant.dart';
+import 'package:eyeassistant/camera.dart';
 import 'package:eyeassistant/widgets/constants/constants.dart';
 import 'package:eyeassistant/widgets/widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:tflite/tflite.dart';
-import 'package:image/image.dart' as img;
-import 'dart:io';
-import 'package:tflite_flutter_helper/tflite_flutter_helper.dart';
 
 class ESMoneyIdentifier extends StatefulWidget {
   const ESMoneyIdentifier({Key? key}) : super(key: key);
@@ -20,89 +14,56 @@ class ESMoneyIdentifier extends StatefulWidget {
 }
 
 class _ESMoneyIdentifierState extends State<ESMoneyIdentifier> {
-  late Classifier classifier;
-  Category? category;
-  // Camera image = Camera();
+  ImageLabeler _imageLabeler = GoogleMlKit.vision.imageLabeler();
+  Camera image = Camera();
   FlutterTts flutterTts = FlutterTts();
-  // String? imagePath;
+  String? imagePath;
   bool hasImage = false;
-  // String camera = 'Camera';
-  // String gallery = 'Gallery';
+  bool isBusy = false;
   String result = '';
-  File? image;
 
-  // Future<void> getImage(ImageSource source) async {
-  //   await image.getImage(source);
-  //   setState(() {
-  //     hasImage = true;
-  //     imagePath = image.image?.path;
-  //     // processImage();
-  //     _predict();
-  //   });
-  // }
-
-  Future getImage(ImageSource source) async {
-    try {
-      final image = await ImagePicker().pickImage(source: source);
-      if (image == null) return;
-      final imageTemporary = File(image.path);
-      setState(() {
-        this.image = imageTemporary;
-        // imagePath = imageTemporary.path;
-        // debugPrint(imagePath);
-        hasImage = true;
-        _predict();
-      });
-    } on PlatformException catch (e) {
-      debugPrint('Failed to pick image: $e');
-    }
-  }
-
-  void _predict() async {
-    img.Image imageInput = img.decodeImage(image!.readAsBytesSync())!;
-    var pred = classifier.predict(imageInput);
-
+  Future<void> getImage(ImageSource source) async {
+    await image.getImage(source);
     setState(() {
-      category = pred;
-      result = category!.label;
-      outputTTS();
+      hasImage = true;
+      imagePath = image.image?.path;
+      processImageWithRemoteModel(imagePath);
     });
   }
 
-  // loadModel() async {
-  //   String? res = await Tflite.loadModel(
-  //       model: "assets/model/ph_currency.tflite",
-  //       labels: "assets/model/ph_currency.txt",
-  //       numThreads: 1,
-  //       isAsset: true,
-  //       useGpuDelegate: false);
+  Future<void> processImageWithRemoteModel(String? path) async {
+    final inputImage = InputImage.fromFilePath(path!);
 
-  //   debugPrint(res);
-  // }
+    final options = CustomImageLabelerOptions(
+        maxCount: 3,
+        customModel: CustomLocalModel.asset,
+        customModelPath: 'ph_currency.tflite');
+    _imageLabeler = GoogleMlKit.vision.imageLabeler(options);
+    processImage(inputImage);
+  }
 
-  // Future<void> processImage() async {
-  //   var recognitions = await Tflite.runModelOnImage(
-  //       path: imagePath!,
-  //       imageMean: 0.0,
-  //       imageStd: 255.0,
-  //       numResults: 2,
-  //       threshold: 0.2,
-  //       asynch: true);
-
-  //   for (var output in recognitions!) {
-  //     debugPrint(output.toString());
-  //     if (mounted) {
-  //       if (output['confidence'] > .5) {
-  //         setState(() {
-  //           result += output['label'].toString() + '\n';
-  //           outputTTS();
-  //         });
-  //       } else {
-  //         outputTTSerror();
-  //       }
-  //     }
-  //   }
-  // }
+  Future<void> processImage(InputImage inputImage) async {
+    if (isBusy) return;
+    isBusy = true;
+    await Future.delayed(const Duration(milliseconds: 50));
+    final labels = await _imageLabeler.processImage(inputImage);
+    if (labels.isEmpty) {
+      outputTTSerror();
+    }
+    debugPrint(labels.toString());
+    isBusy = false;
+    if (mounted) {
+      setState(() {
+        for (ImageLabel label in labels) {
+          result = label.label;
+          outputTTS();
+          debugPrint(label.index.toString());
+          debugPrint(result);
+          debugPrint(label.confidence.toString());
+        }
+      });
+    }
+  }
 
   outputTTS() async {
     await flutterTts.speak('You have $result');
@@ -114,15 +75,13 @@ class _ESMoneyIdentifierState extends State<ESMoneyIdentifier> {
 
   @override
   void initState() {
-    // loadModel();
-    classifier = ClassifierQuant();
     getImage(ImageSource.camera);
     super.initState();
   }
 
   @override
   void dispose() {
-    Tflite.close();
+    _imageLabeler.close();
     flutterTts.stop();
     super.dispose();
   }
@@ -212,7 +171,7 @@ class _ESMoneyIdentifierState extends State<ESMoneyIdentifier> {
             });
       },
       child: Container(
-        child: hasImage ? Image.file(image!) : getChildContainer(),
+        child: hasImage ? Image.file(image.image!) : getChildContainer(),
         width: double.infinity,
         height: MediaQuery.of(context).size.height / 2,
         decoration: BoxDecoration(
