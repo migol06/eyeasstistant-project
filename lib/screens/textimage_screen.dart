@@ -89,6 +89,8 @@ class _ESTextImageScreenState extends State<ESTextImageScreen> {
               ),
               children: [const ESText('Lorem Ipsum Dolor')]);
         },
+        color: ESColor.orange,
+        title: 'Text Image Recognition',
       ),
       body: SingleChildScrollView(
         child: Column(
