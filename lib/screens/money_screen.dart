@@ -1,10 +1,16 @@
-import 'package:eyeassistant/camera.dart';
+// import 'package:eyeassistant/camera.dart';
+import 'package:eyeassistant/image-classifier/classifier.dart';
+import 'package:eyeassistant/image-classifier/classifier_quant.dart';
 import 'package:eyeassistant/widgets/constants/constants.dart';
 import 'package:eyeassistant/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tflite/tflite.dart';
+import 'package:image/image.dart' as img;
+import 'dart:io';
+import 'package:tflite_flutter_helper/tflite_flutter_helper.dart';
 
 class ESMoneyIdentifier extends StatefulWidget {
   const ESMoneyIdentifier({Key? key}) : super(key: key);
@@ -14,57 +20,89 @@ class ESMoneyIdentifier extends StatefulWidget {
 }
 
 class _ESMoneyIdentifierState extends State<ESMoneyIdentifier> {
-  Camera image = Camera();
+  late Classifier classifier;
+  Category? category;
+  // Camera image = Camera();
   FlutterTts flutterTts = FlutterTts();
-  String? imagePath;
+  // String? imagePath;
   bool hasImage = false;
-  String camera = 'Camera';
-  String gallery = 'Gallery';
+  // String camera = 'Camera';
+  // String gallery = 'Gallery';
   String result = '';
+  File? image;
 
-  Future<void> getImage(ImageSource source) async {
-    await image.getImage(source);
+  // Future<void> getImage(ImageSource source) async {
+  //   await image.getImage(source);
+  //   setState(() {
+  //     hasImage = true;
+  //     imagePath = image.image?.path;
+  //     // processImage();
+  //     _predict();
+  //   });
+  // }
+
+  Future getImage(ImageSource source) async {
+    try {
+      final image = await ImagePicker().pickImage(source: source);
+      if (image == null) return;
+      final imageTemporary = File(image.path);
+      setState(() {
+        this.image = imageTemporary;
+        // imagePath = imageTemporary.path;
+        // debugPrint(imagePath);
+        hasImage = true;
+        _predict();
+      });
+    } on PlatformException catch (e) {
+      debugPrint('Failed to pick image: $e');
+    }
+  }
+
+  void _predict() async {
+    img.Image imageInput = img.decodeImage(image!.readAsBytesSync())!;
+    var pred = classifier.predict(imageInput);
+
     setState(() {
-      hasImage = true;
-      imagePath = image.image?.path;
-      processImage();
+      category = pred;
+      result = category!.label;
+      outputTTS();
     });
   }
 
-  loadModel() async {
-    String? res = await Tflite.loadModel(
-        model: "assets/model/ph_currency.tflite",
-        labels: "assets/model/ph_currency.txt",
-        numThreads: 1,
-        isAsset: true,
-        useGpuDelegate: false);
+  // loadModel() async {
+  //   String? res = await Tflite.loadModel(
+  //       model: "assets/model/ph_currency.tflite",
+  //       labels: "assets/model/ph_currency.txt",
+  //       numThreads: 1,
+  //       isAsset: true,
+  //       useGpuDelegate: false);
 
-    debugPrint(res);
-  }
+  //   debugPrint(res);
+  // }
 
-  Future<void> processImage() async {
-    var recognitions = await Tflite.runModelOnImage(
-        path: imagePath!,
-        imageMean: 0.0,
-        imageStd: 255.0,
-        numResults: 2,
-        threshold: 0.2,
-        asynch: true);
+  // Future<void> processImage() async {
+  //   var recognitions = await Tflite.runModelOnImage(
+  //       path: imagePath!,
+  //       imageMean: 0.0,
+  //       imageStd: 255.0,
+  //       numResults: 2,
+  //       threshold: 0.2,
+  //       asynch: true);
 
-    for (var output in recognitions!) {
-      debugPrint(output.toString());
-      if (mounted) {
-        if (output['confidence'] > .5) {
-          setState(() {
-            result += output['label'].toString() + '\n';
-            outputTTS();
-          });
-        } else {
-          outputTTSerror();
-        }
-      }
-    }
-  }
+  //   for (var output in recognitions!) {
+  //     debugPrint(output.toString());
+  //     if (mounted) {
+  //       if (output['confidence'] > .5) {
+  //         setState(() {
+  //           result += output['label'].toString() + '\n';
+  //           outputTTS();
+  //         });
+  //       } else {
+  //         outputTTSerror();
+  //       }
+  //     }
+  //   }
+  // }
 
   outputTTS() async {
     await flutterTts.speak('You have $result');
@@ -76,7 +114,8 @@ class _ESMoneyIdentifierState extends State<ESMoneyIdentifier> {
 
   @override
   void initState() {
-    loadModel();
+    // loadModel();
+    classifier = ClassifierQuant();
     getImage(ImageSource.camera);
     super.initState();
   }
@@ -173,7 +212,7 @@ class _ESMoneyIdentifierState extends State<ESMoneyIdentifier> {
             });
       },
       child: Container(
-        child: hasImage ? Image.file(image.image!) : getChildContainer(),
+        child: hasImage ? Image.file(image!) : getChildContainer(),
         width: double.infinity,
         height: MediaQuery.of(context).size.height / 2,
         decoration: BoxDecoration(
