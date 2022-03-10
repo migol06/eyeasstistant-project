@@ -55,7 +55,7 @@ class _ESMoneyIdentifierState extends State<ESMoneyIdentifier> {
     if (mounted) {
       setState(() {
         for (ImageLabel label in labels) {
-          result = label.label;
+          result += label.label + " ";
           outputTTS();
           debugPrint(label.index.toString());
           debugPrint(result);
@@ -90,15 +90,8 @@ class _ESMoneyIdentifierState extends State<ESMoneyIdentifier> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: ESAppBar(
-        onTap: () {
-          showAboutDialog(
-              context: context,
-              applicationName: 'Text Image Screen',
-              applicationIcon: Image.asset(
-                'assets/images/eyessistant.png',
-                scale: 5,
-              ),
-              children: [const ESText('Lorem Ipsum Dolor')]);
+        onTap: () async {
+          await flutterTts.speak('Money Identifier');
         },
         color: Colors.green[700]!,
         title: 'Money Identifier',

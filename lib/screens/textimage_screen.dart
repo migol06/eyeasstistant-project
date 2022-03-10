@@ -79,15 +79,8 @@ class _ESTextImageScreenState extends State<ESTextImageScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: ESAppBar(
-        onTap: () {
-          showAboutDialog(
-              context: context,
-              applicationName: 'Text Image Screen',
-              applicationIcon: Image.asset(
-                'assets/images/eyessistant.png',
-                scale: 5,
-              ),
-              children: [const ESText('Lorem Ipsum Dolor')]);
+        onTap: () async {
+          await flutterTts.speak('Text Image Recognition');
         },
         color: ESColor.orange,
         title: 'Text Image Recognition',
