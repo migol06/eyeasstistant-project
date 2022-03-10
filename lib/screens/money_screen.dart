@@ -4,7 +4,6 @@ import 'package:eyeassistant/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:tflite/tflite.dart';
 
 class ESMoneyIdentifier extends StatefulWidget {
   const ESMoneyIdentifier({Key? key}) : super(key: key);
@@ -18,8 +17,6 @@ class _ESMoneyIdentifierState extends State<ESMoneyIdentifier> {
   FlutterTts flutterTts = FlutterTts();
   String? imagePath;
   bool hasImage = false;
-  String camera = 'Camera';
-  String gallery = 'Gallery';
   String result = '';
 
   Future<void> getImage(ImageSource source) async {
@@ -27,43 +24,7 @@ class _ESMoneyIdentifierState extends State<ESMoneyIdentifier> {
     setState(() {
       hasImage = true;
       imagePath = image.image?.path;
-      processImage();
     });
-  }
-
-  loadModel() async {
-    String? res = await Tflite.loadModel(
-        model: "assets/model/ph_currency.tflite",
-        labels: "assets/model/ph_currency.txt",
-        numThreads: 1,
-        isAsset: true,
-        useGpuDelegate: false);
-
-    debugPrint(res);
-  }
-
-  Future<void> processImage() async {
-    var recognitions = await Tflite.runModelOnImage(
-        path: imagePath!,
-        imageMean: 0.0,
-        imageStd: 255.0,
-        numResults: 2,
-        threshold: 0.2,
-        asynch: true);
-
-    for (var output in recognitions!) {
-      debugPrint(output.toString());
-      if (mounted) {
-        if (output['confidence'] > .5) {
-          setState(() {
-            result += output['label'].toString() + '\n';
-            outputTTS();
-          });
-        } else {
-          outputTTSerror();
-        }
-      }
-    }
   }
 
   outputTTS() async {
@@ -76,14 +37,12 @@ class _ESMoneyIdentifierState extends State<ESMoneyIdentifier> {
 
   @override
   void initState() {
-    loadModel();
     getImage(ImageSource.camera);
     super.initState();
   }
 
   @override
   void dispose() {
-    Tflite.close();
     flutterTts.stop();
     super.dispose();
   }
