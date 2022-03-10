@@ -77,6 +77,7 @@ class _ESMoneyIdentifierState extends State<ESMoneyIdentifier> {
   @override
   void initState() {
     loadModel();
+    getImage(ImageSource.camera);
     super.initState();
   }
 
@@ -136,7 +137,6 @@ class _ESMoneyIdentifierState extends State<ESMoneyIdentifier> {
                 onTap: () {
                   getImage(ImageSource.camera);
                   result = '';
-                  // flutterTts.speak(camera);
                 },
               ),
             ),
@@ -151,7 +151,6 @@ class _ESMoneyIdentifierState extends State<ESMoneyIdentifier> {
                   onTap: () {
                     getImage(ImageSource.gallery);
                     result = '';
-                    // flutterTts.speak(gallery);
                   }),
             ),
           ),
@@ -195,7 +194,6 @@ class _ESMoneyIdentifierState extends State<ESMoneyIdentifier> {
           onTap: () {
             getImage(ImageSource.camera);
             result = '';
-            // flutterTts.stop();
             Navigator.pop(context);
           },
         ),
@@ -204,7 +202,6 @@ class _ESMoneyIdentifierState extends State<ESMoneyIdentifier> {
           title: const Text('Gallery'),
           onTap: () {
             getImage(ImageSource.gallery);
-            // flutterTts.stop();
             result = '';
             Navigator.pop(context);
           },
