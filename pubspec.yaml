@@ -43,11 +43,19 @@ dependencies:
   google_ml_kit: ^0.7.3
   clipboard: ^0.1.3
   firebase_analytics: ^9.1.0
+  flutter_native_splash: ^2.1.0
 
 flutter_icons:
   android: true
   ios: true
   image_path: "assets/images/logo.png"
+
+flutter_native_splash:
+  color: "#0091FF"
+  image: assets/images/splashfinallogo.png
+  android: true
+  ios: true
+  web: false
 
 dev_dependencies:
   flutter_test:

@@ -6,4 +6,5 @@ class ESFontSize {
   static const double large = 17;
   static const double xLarge = 20;
   static const double xxLarge = 25;
+  static const double xxxLarge = 70;
 }
