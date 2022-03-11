@@ -68,20 +68,4 @@ class ESHomeButton extends StatelessWidget {
       ),
     );
   }
-
-  Widget _getIcon() {
-    if (title.toUpperCase() == 'LIVE CAMERA') {
-      return const Icon(
-        Icons.videocam_outlined,
-        color: Colors.white,
-        size: ESGrid.xxLarge,
-      );
-    } else {
-      return const Icon(
-        Icons.notes_outlined,
-        color: Colors.white,
-        size: ESGrid.xxLarge,
-      );
-    }
-  }
 }
