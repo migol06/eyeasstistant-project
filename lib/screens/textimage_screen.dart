@@ -17,7 +17,6 @@ class ESTextImageScreen extends StatefulWidget {
 class _ESTextImageScreenState extends State<ESTextImageScreen> {
   Camera image = Camera();
   bool hasImage = false;
-  // File? image;
   TextDetector textDetector = GoogleMlKit.vision.textDetector();
   late String imagePath;
   String scanText = '';
