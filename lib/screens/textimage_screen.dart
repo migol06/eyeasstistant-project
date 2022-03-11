@@ -27,15 +27,10 @@ class _ESTextImageScreenState extends State<ESTextImageScreen> {
 
   Future getImage(ImageSource source) async {
     await image.getImage(source);
-    setState(() async {
+    setState(() {
       hasImage = true;
       imagePath = image.image!.path;
       getText(imagePath);
-      await Future.delayed(const Duration(seconds: 5), () {
-        setState(() {
-          _speech();
-        });
-      });
     });
   }
 
@@ -55,6 +50,9 @@ class _ESTextImageScreenState extends State<ESTextImageScreen> {
         scanText = scanText + '\n';
       }
     }
+    await Future.delayed(const Duration(seconds: 3), () {
+      _speech();
+    });
   }
 
   @override

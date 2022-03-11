@@ -3,6 +3,11 @@ import 'package:eyeassistant/widgets/constants/constants.dart';
 import 'package:eyeassistant/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
+const String liveCameraDesc = 'A real-time object detection camera';
+const String moneyIdentifierDesc =
+    'Philippine Peso bill identification via photo';
+const String textImageDesc = 'Image to text reader';
+
 class ESHomeScreen extends StatelessWidget {
   const ESHomeScreen({Key? key}) : super(key: key);
 
@@ -39,25 +44,22 @@ class ESHomeScreen extends StatelessWidget {
                                 child: ListTile(
                                     title: const Text('About us'),
                                     onTap: () {
-                                      showAboutDialog(
+                                      Navigator.pop(context);
+                                      showDialog(
                                           context: context,
-                                          applicationName: 'Eyessistant',
-                                          applicationVersion: '1.0.0',
-                                          applicationIcon: Image.asset(
-                                            'assets/images/eyessistant.png',
-                                            scale: 5,
-                                          ),
-                                          children: [
-                                            const ESText('Lorem Ipsum Dolor')
-                                          ]);
+                                          builder: (_) => const AlertDialog(
+                                                title: Text('About Us'),
+                                                content: Text(
+                                                    'Welcome to Eyessistant'),
+                                              ));
                                     }))
                           ],
                         ),
                       )),
-                  const Image(
-                      image: AssetImage('assets/images/eyessistant.png'),
-                      width: ESGrid.xxxxxLarge,
-                      height: ESGrid.xLarge),
+                  Image.asset(
+                    'assets/images/logo_final.png',
+                    scale: 30,
+                  ),
                   const ESText(
                     'EYESSISTANT',
                     color: Colors.white,
@@ -72,7 +74,7 @@ class ESHomeScreen extends StatelessWidget {
                     children: [
                       ESHomeButton(
                         title: "Live Camera",
-                        desc: 'Lorem ipsum Dolor',
+                        desc: liveCameraDesc,
                         backGroundColor: ESColor.primaryBlue,
                         onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(
@@ -86,7 +88,7 @@ class ESHomeScreen extends StatelessWidget {
                       ),
                       ESHomeButton(
                         title: "Money Identifier",
-                        desc: 'Lorem ipsum Dolor',
+                        desc: moneyIdentifierDesc,
                         backGroundColor: Colors.green[700]!,
                         onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(
@@ -99,7 +101,7 @@ class ESHomeScreen extends StatelessWidget {
                       ),
                       ESHomeButton(
                         title: 'Text Image Recognition',
-                        desc: 'Lorem Ipsum Dolor',
+                        desc: textImageDesc,
                         backGroundColor: ESColor.orange,
                         onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(
