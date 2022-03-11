@@ -96,15 +96,8 @@ class _ESLiveCameraScreenState extends State<ESLiveCameraScreen> {
     return Scaffold(
       appBar: ESAppBar(
         color: ESColor.primaryBlue,
-        onTap: () {
-          showAboutDialog(
-              context: context,
-              applicationName: 'Live Camera',
-              applicationIcon: Image.asset(
-                'assets/images/eyessistant.png',
-                scale: 5,
-              ),
-              children: [const ESText('Lorem Ipsum Dolor')]);
+        onTap: () async {
+          await flutterTts.speak('Live Camera');
         },
         title: 'Live Camera',
       ),
