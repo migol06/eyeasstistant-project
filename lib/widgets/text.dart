@@ -2,7 +2,16 @@ import 'package:flutter/material.dart';
 
 import 'constants/constants.dart';
 
-enum ESTextSize { xxSmall, xSmall, small, medium, large, xLarge, xxLarge }
+enum ESTextSize {
+  xxSmall,
+  xSmall,
+  small,
+  medium,
+  large,
+  xLarge,
+  xxLarge,
+  xxxLarge
+}
 
 enum ESTextWeight { light, normal, semiBold, bold, extraBold }
 
@@ -144,6 +153,8 @@ class ESText extends StatelessWidget {
         return ESFontSize.xLarge;
       case ESTextSize.xxLarge:
         return ESFontSize.xxLarge;
+      case ESTextSize.xxxLarge:
+        return ESFontSize.xxxLarge;
     }
   }
 

@@ -118,7 +118,7 @@ class _ESMoneyIdentifierState extends State<ESMoneyIdentifier> {
           _getButton(),
           ESText(
             result,
-            size: ESTextSize.xxLarge,
+            size: ESTextSize.xxxLarge,
           )
         ],
       ),
@@ -126,40 +126,56 @@ class _ESMoneyIdentifierState extends State<ESMoneyIdentifier> {
   }
 
   Widget _getButton() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ESButton(
-                icon: Icons.camera_alt,
-                description: 'Camera',
-                color: ESColor.orange,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ESButton(
+              icon: Icons.camera_alt,
+              description: 'Camera',
+              color: ESColor.orange,
+              onTap: () {
+                getImage(ImageSource.camera);
+                result = '';
+              },
+            ),
+          ),
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ESButton(
+                icon: Icons.collections_outlined,
+                description: 'Gallery',
+                color: Colors.green,
                 onTap: () {
-                  getImage(ImageSource.camera);
+                  getImage(ImageSource.gallery);
                   result = '';
-                },
-              ),
-            ),
+                }),
           ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ESButton(
-                  icon: Icons.collections_outlined,
-                  description: 'Gallery',
-                  color: ESColor.primaryBlue,
-                  onTap: () {
-                    getImage(ImageSource.gallery);
-                    result = '';
-                  }),
-            ),
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ESButton(
+                icon: Icons.document_scanner_outlined,
+                description: 'Speak',
+                color: ESColor.primaryBlue,
+                onTap: () async {
+                  if (!hasImage) {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text('Please add an Image'),
+                    ));
+                    flutterTts.speak('Scan, Please add an Image');
+                  } else {
+                    outputTTS();
+                  }
+                }),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
