@@ -27,9 +27,15 @@ class _ESTextImageScreenState extends State<ESTextImageScreen> {
 
   Future getImage(ImageSource source) async {
     await image.getImage(source);
-    setState(() {
+    setState(() async {
       hasImage = true;
       imagePath = image.image!.path;
+      getText(imagePath);
+      await Future.delayed(const Duration(seconds: 5), () {
+        setState(() {
+          _speech();
+        });
+      });
     });
   }
 
@@ -142,17 +148,10 @@ class _ESTextImageScreenState extends State<ESTextImageScreen> {
               }),
           ESButton(
               icon: Icons.document_scanner_outlined,
-              description: 'Scan',
+              description: 'Speak',
               color: ESColor.primaryBlue,
               onTap: () async {
-                if (scanText.isEmpty && hasImage) {
-                  getText(imagePath);
-                  await Future.delayed(const Duration(seconds: 5), () {
-                    setState(() {
-                      _speech();
-                    });
-                  });
-                } else if (!hasImage) {
+                if (!hasImage) {
                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                     content: Text('Please add an Image'),
                   ));
