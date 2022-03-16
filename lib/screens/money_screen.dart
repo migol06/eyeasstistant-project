@@ -28,11 +28,15 @@ class _ESMoneyIdentifierState extends State<ESMoneyIdentifier> {
 
   Future<void> getImage(ImageSource source) async {
     await image.getImage(source);
-    setState(() {
-      hasImage = true;
-      imagePath = image.image?.path;
-      processImageWithRemoteModel(imagePath);
-    });
+    if (image.image != null) {
+      setState(() {
+        hasImage = true;
+        imagePath = image.image?.path;
+        processImageWithRemoteModel(imagePath);
+      });
+    } else {
+      hasImage = false;
+    }
   }
 
   Future<void> processImageWithRemoteModel(String? path) async {
@@ -80,7 +84,7 @@ class _ESMoneyIdentifierState extends State<ESMoneyIdentifier> {
   @override
   void initState() {
     getImage(ImageSource.camera);
-    hasImage = false;
+    // hasImage = false;
     super.initState();
   }
 
@@ -94,11 +98,14 @@ class _ESMoneyIdentifierState extends State<ESMoneyIdentifier> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: ESAppBar(
-        onTap: () async {
+        onTapButton: () async {
           await flutterTts.speak(_title);
         },
         color: Colors.green[700]!,
         title: _title,
+        onBackButton: () {
+          Navigator.of(context).pop();
+        },
       ),
       body: Column(
         children: [

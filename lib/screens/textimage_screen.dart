@@ -75,11 +75,14 @@ class _ESTextImageScreenState extends State<ESTextImageScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: ESAppBar(
-        onTap: () async {
+        onTapButton: () async {
           await flutterTts.speak(_title);
         },
         color: ESColor.orange,
         title: _title,
+        onBackButton: () {
+          Navigator.of(context).pop();
+        },
       ),
       body: SingleChildScrollView(
         child: Column(
