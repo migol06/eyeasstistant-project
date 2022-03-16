@@ -84,7 +84,6 @@ class _ESMoneyIdentifierState extends State<ESMoneyIdentifier> {
   @override
   void initState() {
     getImage(ImageSource.camera);
-    // hasImage = false;
     super.initState();
   }
 
