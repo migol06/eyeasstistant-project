@@ -33,45 +33,38 @@ class _ESLiveCameraScreenState extends State<ESLiveCameraScreen> {
       if (!mounted) {
         return;
       }
-      setState(() {});
+      setState(() {
+        controller?.startImageStream((CameraImage img) async {
+          if (!isDetecting) {
+            isDetecting = true;
+            var recognitions = await Tflite.runModelOnFrame(
+                bytesList: img.planes.map((plane) {
+                  return plane.bytes;
+                }).toList(),
+                imageHeight: img.height,
+                imageWidth: img.width,
+                imageMean: 127.5,
+                imageStd: 127.5,
+                rotation: 90,
+                numResults: 1,
+                threshold: 0.1,
+                asynch: true);
 
-      controller?.startImageStream((CameraImage img) async {
-        if (!isDetecting) {
-          isDetecting = true;
-          var recognitions = await Tflite.runModelOnFrame(
-              bytesList: img.planes.map((plane) {
-                return plane.bytes;
-              }).toList(),
-              imageHeight: img.height,
-              imageWidth: img.width,
-              imageMean: 127.5,
-              imageStd: 127.5,
-              rotation: 90,
-              numResults: 1,
-              threshold: 0.1,
-              asynch: true);
-
-          for (var response in recognitions!) {
-            if (mounted) {
+            for (var response in recognitions!) {
               await Future.delayed(const Duration(seconds: 1));
+              detectedImage = response['label'];
+              isDetecting = false;
+            }
+
+            if (mounted) {
               setState(() {
-                detectedImage = response['label'];
+                detectedImage;
                 debugPrint(detectedImage);
               });
+              _speech();
             }
-            _speech();
-            isDetecting = false;
           }
-
-          // if (mounted) {
-          //   setState(() {
-          //     detectedImage;
-          //     _speech();
-          //     debugPrint(detectedImage);
-          //   });
-          // }
-
-        }
+        });
       });
     });
 
@@ -85,6 +78,7 @@ class _ESLiveCameraScreenState extends State<ESLiveCameraScreen> {
     Tflite.close();
     controller?.dispose();
     flutterTts.stop();
+    isDetecting = true;
   }
 
   Future _speech() async {
