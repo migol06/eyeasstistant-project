@@ -6,6 +6,8 @@ import 'package:flutter_tts/flutter_tts.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:image_picker/image_picker.dart';
 
+const String _title = 'Money Identifier';
+
 class ESMoneyIdentifier extends StatefulWidget {
   const ESMoneyIdentifier({Key? key}) : super(key: key);
 
@@ -21,7 +23,8 @@ class _ESMoneyIdentifierState extends State<ESMoneyIdentifier> {
   bool hasImage = false;
   bool isBusy = false;
   String result = '';
-  String title = 'Money Identifier';
+
+  List<ImageLabel>? labels;
 
   Future<void> getImage(ImageSource source) async {
     await image.getImage(source);
@@ -47,15 +50,15 @@ class _ESMoneyIdentifierState extends State<ESMoneyIdentifier> {
     if (isBusy) return;
     isBusy = true;
     await Future.delayed(const Duration(milliseconds: 50));
-    final labels = await _imageLabeler.processImage(inputImage);
-    if (labels.isEmpty) {
+    labels = await _imageLabeler.processImage(inputImage);
+    if (labels!.isEmpty) {
       outputTTSerror();
     }
     debugPrint(labels.toString());
     isBusy = false;
     if (mounted) {
       setState(() {
-        for (ImageLabel label in labels) {
+        for (ImageLabel label in labels!) {
           result += label.label + " ";
           outputTTS();
           debugPrint(label.index.toString());
@@ -77,6 +80,7 @@ class _ESMoneyIdentifierState extends State<ESMoneyIdentifier> {
   @override
   void initState() {
     getImage(ImageSource.camera);
+    hasImage = false;
     super.initState();
   }
 
@@ -91,10 +95,10 @@ class _ESMoneyIdentifierState extends State<ESMoneyIdentifier> {
     return Scaffold(
       appBar: ESAppBar(
         onTap: () async {
-          await flutterTts.speak(title);
+          await flutterTts.speak(_title);
         },
         color: Colors.green[700]!,
-        title: title,
+        title: _title,
       ),
       body: Column(
         children: [
@@ -160,7 +164,7 @@ class _ESMoneyIdentifierState extends State<ESMoneyIdentifier> {
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: ESButton(
-                icon: Icons.document_scanner_outlined,
+                icon: Icons.volume_up,
                 description: 'Speak',
                 color: ESColor.primaryBlue,
                 onTap: () async {
@@ -168,7 +172,9 @@ class _ESMoneyIdentifierState extends State<ESMoneyIdentifier> {
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                       content: Text('Please add an Image'),
                     ));
-                    flutterTts.speak('Scan, Please add an Image');
+                    flutterTts.speak('Please add an Image');
+                  } else if (labels!.isEmpty) {
+                    outputTTSerror();
                   } else {
                     outputTTS();
                   }

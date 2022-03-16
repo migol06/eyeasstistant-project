@@ -7,6 +7,10 @@ import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:clipboard/clipboard.dart';
 
+const String _camera = 'Camera';
+const String _gallery = 'Gallery';
+const String _title = 'Text Image Recognition';
+
 class ESTextImageScreen extends StatefulWidget {
   const ESTextImageScreen({Key? key}) : super(key: key);
 
@@ -21,9 +25,6 @@ class _ESTextImageScreenState extends State<ESTextImageScreen> {
   late String imagePath;
   String scanText = '';
   FlutterTts flutterTts = FlutterTts();
-  String camera = 'Camera';
-  String gallery = 'Gallery';
-  String title = 'Text Image Recognition';
 
   Future getImage(ImageSource source) async {
     await image.getImage(source);
@@ -75,10 +76,10 @@ class _ESTextImageScreenState extends State<ESTextImageScreen> {
     return Scaffold(
       appBar: ESAppBar(
         onTap: () async {
-          await flutterTts.speak(title);
+          await flutterTts.speak(_title);
         },
         color: ESColor.orange,
-        title: title,
+        title: _title,
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -127,25 +128,25 @@ class _ESTextImageScreenState extends State<ESTextImageScreen> {
         children: [
           ESButton(
             icon: Icons.camera_alt,
-            description: camera,
+            description: _camera,
             color: ESColor.orange,
             onTap: () {
               getImage(ImageSource.camera);
               scanText = '';
-              flutterTts.speak(camera);
+              flutterTts.speak(_camera);
             },
           ),
           ESButton(
               icon: Icons.collections_outlined,
-              description: gallery,
+              description: _gallery,
               color: Colors.green,
               onTap: () {
                 getImage(ImageSource.gallery);
                 scanText = '';
-                flutterTts.speak(gallery);
+                flutterTts.speak(_gallery);
               }),
           ESButton(
-              icon: Icons.document_scanner_outlined,
+              icon: Icons.volume_up,
               description: 'Speak',
               color: ESColor.primaryBlue,
               onTap: () async {
