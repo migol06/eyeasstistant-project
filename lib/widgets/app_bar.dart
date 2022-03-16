@@ -2,15 +2,17 @@ import 'package:flutter/material.dart';
 import 'constants/constants.dart';
 
 class ESAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final VoidCallback? onTap;
+  final VoidCallback? onTapButton;
+  final VoidCallback onBackButton;
   final String title;
   final Color color;
 
   const ESAppBar({
     Key? key,
-    this.onTap,
+    this.onTapButton,
     required this.title,
     required this.color,
+    required this.onBackButton,
   }) : super(key: key);
 
   @override
@@ -18,9 +20,7 @@ class ESAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       title: Text(title),
       leading: IconButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
+          onPressed: onBackButton,
           icon: const Icon(
             Icons.arrow_back_ios,
             color: Colors.white,
@@ -29,7 +29,7 @@ class ESAppBar extends StatelessWidget implements PreferredSizeWidget {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: InkWell(
-            onTap: onTap,
+            onTap: onTapButton,
             child: const Icon(
               Icons.help_outline,
               color: Colors.white,

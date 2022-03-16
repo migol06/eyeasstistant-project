@@ -3,6 +3,7 @@ import 'package:eyeassistant/main.dart';
 import 'package:eyeassistant/widgets/constants/constants.dart';
 import 'package:eyeassistant/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:tflite/tflite.dart';
 
@@ -78,7 +79,6 @@ class _ESLiveCameraScreenState extends State<ESLiveCameraScreen> {
     Tflite.close();
     controller?.dispose();
     flutterTts.stop();
-    isDetecting = true;
   }
 
   Future _speech() async {
@@ -90,10 +90,13 @@ class _ESLiveCameraScreenState extends State<ESLiveCameraScreen> {
     return Scaffold(
       appBar: ESAppBar(
         color: ESColor.primaryBlue,
-        onTap: () async {
+        onTapButton: () async {
           await flutterTts.speak('Live Camera');
         },
         title: 'Live Camera',
+        onBackButton: () {
+          SystemNavigator.pop();
+        },
       ),
       body: Stack(children: [
         Center(child: CameraPreview(controller!)),
